@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>출판사 주최 어린이·청소년 문학 통합 공모전</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+            color: #0f172a; /* slate-900 */
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+
+        /* 3D Flip Card Animation */
+        .card-container {
+            perspective: 1000px;
+            height: 420px; 
+        }
+        
+        .card-flip {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        
+        .card-flip.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .card-front {
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-back {
+            transform: rotateY(180deg);
+            background-color: #f1f5f9;
+            border: 2px solid #cbd5e1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        /* Custom Scrollbar */
+        .scrollbar-hide::-webkit-scrollbar {
+            width: 6px;
+        }
+        .scrollbar-hide::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .scrollbar-hide::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Filter Button Active State */
+        .btn-filter.active {
+            background-color: #334155; /* slate-700 */
+            color: white;
+            border-color: #334155;
+        }
+
+        /* Publisher Brand Colors */
+        .pub-biryongso { color: #ea580c; } /* orange-600 */
+        .bg-biryongso { background-color: #ea580c; }
+        .border-biryongso { border-color: #ea580c; }
+        .bg-biryongso-light { background-color: #ffedd5; } /* orange-50 */
+
+        .pub-changbi { color: #059669; } /* emerald-600 */
+        .bg-changbi { background-color: #059669; }
+        .border-changbi { border-color: #059669; }
+        .bg-changbi-light { background-color: #d1fae5; } /* emerald-50 */
+
+        .pub-munhak { color: #b45309; } /* amber-700 */
+        .bg-munhak { background-color: #b45309; }
+        .border-munhak { border-color: #b45309; }
+        .bg-munhak-light { background-color: #fef3c7; } /* amber-50 */
+
+        .pub-miraen { color: #8b5cf6; } /* violet-500 */
+        .bg-miraen { background-color: #8b5cf6; }
+        .border-miraen { border-color: #8b5cf6; }
+        .bg-miraen-light { background-color: #ede9fe; } /* violet-100 */
+
+        .pub-hyunbooks { color: #0ea5e9; } /* sky-500 */
+        .bg-hyunbooks { background-color: #0ea5e9; }
+        .border-hyunbooks { border-color: #0ea5e9; }
+        .bg-hyunbooks-light { background-color: #e0f2fe; } /* sky-100 */
+
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3">
+                    <span class="text-xl font-bold text-slate-800 tracking-tight">✍️ 2026 공모전 가이드</span>
+                </div>
+                <nav class="hidden md:flex space-x-6 text-sm">
+                    <a href="#dashboard" class="text-slate-600 hover:text-slate-900 font-semibold transition-colors">일정 분석</a>
+                    <a href="#contests" class="text-slate-600 hover:text-slate-900 font-semibold transition-colors">전체 공모전(<span id="nav-count"></span>)</a>
+                    <a href="#rules" class="text-slate-600 hover:text-slate-900 font-semibold transition-colors">통합 체크리스트</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        
+        <!-- Hero Section -->
+        <section class="bg-gradient-to-b from-slate-100 to-white py-16 md:py-20 relative overflow-hidden border-b border-slate-200">
+            <div class="max-w-5xl mx-auto px-4 text-center relative z-10">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight leading-tight">
+                    출판사 주최 어린이/청소년 책 공모전
+                </h1>
+                <p class="text-lg md:text-xl text-indigo-600 font-bold mb-10 max-w-2xl mx-auto">
+                    주요 문학상 중 내 작품에 가장 잘 맞는 무대를 찾아보세요.
+                </p>
+                
+                <!-- Master Countdown -->
+                <div class="bg-white rounded-2xl p-6 shadow-xl inline-block border border-slate-100 relative">
+                    <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                        가장 임박한 마감일
+                    </div>
+                    <div class="mt-2 flex flex-col md:flex-row items-center gap-4 md:gap-8">
+                        <div class="text-center">
+                            <p class="text-sm font-bold text-slate-500 mb-1" id="next-pub-badge">출판사</p>
+                            <p class="text-lg font-extrabold text-slate-800" id="next-contest-name">로딩 중...</p>
+                        </div>
+                        <div class="hidden md:block w-px h-12 bg-slate-200"></div>
+                        <div class="flex items-baseline gap-2 justify-center">
+                            <span class="text-5xl font-black text-slate-800 tabular-nums" id="d-day">--</span>
+                            <span class="text-slate-500 font-medium">일 남음</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">📊 2026 캘린더 전략 분석</h2>
+                    <p class="text-slate-600">주요 5개 출판사의 마감 일정이 상/하/연말별로 분포되어 있습니다. 연간 집필 계획을 세워보세요.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Master Timeline Chart -->
+                    <div class="lg:col-span-2 bg-slate-50 rounded-2xl p-6 shadow-sm border border-slate-200">
+                        <h3 class="text-lg font-bold text-slate-800 mb-4 text-center">📅 월별 마감 집중도</h3>
+                        <div class="chart-container">
+                            <canvas id="timelineChart"></canvas>
+                        </div>
+                        <div class="mt-4 flex flex-wrap justify-center gap-3 text-xs font-semibold px-2">
+                            <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-biryongso mr-1"></span>비룡소</span>
+                            <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-changbi mr-1"></span>창비</span>
+                            <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-munhak mr-1"></span>문학동네</span>
+                            <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-miraen mr-1"></span>미래엔</span>
+                            <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-hyunbooks mr-1"></span>현북스</span>
+                        </div>
+                    </div>
+
+                    <!-- Category Ratio Chart -->
+                    <div class="bg-slate-50 rounded-2xl p-6 shadow-sm border border-slate-200 flex flex-col justify-center">
+                        <h3 class="text-lg font-bold text-slate-800 mb-4 text-center">🎨 모집 부문별 비율</h3>
+                        <div class="chart-container" style="height: 250px;">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-4 text-center leading-relaxed">
+                            어린이 동화/텍스트 부문이 가장 많으며,<br>
+                            그림책과 청소년 소설도 활발히 모집 중입니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contests Section -->
+        <section id="contests" class="py-16 bg-slate-100 border-t border-slate-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-slate-900 mb-2">총 <span id="section-count"></span>개 공모전 탐색</h2>
+                        <p class="text-slate-600 text-sm">조건에 맞는 공모전을 찾고 카드를 클릭해 상세 요강을 확인하세요.</p>
+                    </div>
+                    
+                    <!-- Filters -->
+                    <div class="flex flex-col gap-3">
+                        <!-- Publisher Filter -->
+                        <div class="flex flex-wrap gap-2 justify-center md:justify-end">
+                            <span class="text-xs font-bold text-slate-400 uppercase py-2 mr-1">출판사</span>
+                            <button onclick="applyFilters('pub', 'all')" data-filter="pub-all" class="filter-btn active px-3 py-1.5 rounded-full border border-slate-300 bg-white text-slate-600 text-xs md:text-sm font-semibold transition-colors">전체</button>
+                            <button onclick="applyFilters('pub', '비룡소')" data-filter="pub-비룡소" class="filter-btn px-3 py-1.5 rounded-full border border-slate-300 bg-white text-slate-600 text-xs md:text-sm font-semibold transition-colors">비룡소</button>
+                            <button onclick="applyFilters('pub', '창비')" data-filter="pub-창비" class="filter-btn px-3 py-1.5 rounded-full border border-slate-300 bg-white text-slate-600 text-xs md:text-sm font-semibold transition-colors">창비</button>
+                            <button onclick="applyFilters('pub', '문학동네')" data-filter="pub-문학동네" class="filter-btn px-3 py-1.5 rounded-full border border-slate-300 bg-white text-slate-600 text-xs md:text-sm font-semibold transition-colors">문학동네</button>
+                            <button onclick="applyFilters('pub', '미래엔')" data-filter="pub-미래엔" class="filter-btn px-3 py-1.5 rounded-full border border-slate-300 bg-white text-slate-600 text-xs md:text-sm font-semibold transition-colors">미래엔</button>
+                            <button onclick="applyFilters('pub', '현북스')" data-filter="pub-현북스" class="filter-btn px-3 py-1.5 rounded-full border border-slate-300 bg-white text-slate-600 text-xs md:text-sm font-semibold transition-colors">현북스</button>
+                        </div>
+                        <!-- Genre Filter -->
+                        <div class="flex flex-wrap gap-2 justify-center md:justify-end">
+                            <span class="text-xs font-bold text-slate-400 uppercase py-2 mr-1">부문별</span>
+                            <button onclick="applyFilters('genre', 'all')" data-filter="genre-all" class="filter-btn-sub active px-3 py-1 rounded bg-slate-200 text-slate-600 text-xs font-semibold transition-colors">모든 장르</button>
+                            <button onclick="applyFilters('genre', 'picture')" data-filter="genre-picture" class="filter-btn-sub px-3 py-1 rounded bg-white border border-slate-300 text-slate-600 text-xs font-semibold transition-colors">🎨 그림책</button>
+                            <button onclick="applyFilters('genre', 'child')" data-filter="genre-child" class="filter-btn-sub px-3 py-1 rounded bg-white border border-slate-300 text-slate-600 text-xs font-semibold transition-colors">👧 동화/논픽션</button>
+                            <button onclick="applyFilters('genre', 'youth')" data-filter="genre-youth" class="filter-btn-sub px-3 py-1 rounded bg-white border border-slate-300 text-slate-600 text-xs font-semibold transition-colors">📘 청소년</button>
+                            <button onclick="applyFilters('genre', 'poem')" data-filter="genre-poem" class="filter-btn-sub px-3 py-1 rounded bg-white border border-slate-300 text-slate-600 text-xs font-semibold transition-colors">✒️ 동시</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grid -->
+                <div id="cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Cards injected by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Master Checklist Section -->
+        <section id="rules" class="py-16 bg-white">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">📮 통합 접수 체크리스트</h2>
+                    <p class="text-slate-600">출판사마다 접수 방식과 필수 요구사항이 다릅니다. 발송 전 꼼꼼히 체크하세요.</p>
+                </div>
+
+                <div class="bg-slate-50 p-6 md:p-10 rounded-2xl border border-slate-200">
+                    <div id="checklist-container" class="space-y-3 mb-8">
+                        <!-- Checklist JS Injected -->
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-6 border-t border-slate-200">
+                        <!-- 비룡소 -->
+                        <div class="p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                            <p class="font-bold text-orange-800 mb-1 text-sm">비룡소 특이사항</p>
+                            <p class="text-xs text-orange-700">홈페이지 <strong>'응모지원서' 다운로드 및 부착 필수</strong>. 그림책 원화 제출 절대 불가 (가제본).</p>
+                        </div>
+                        <!-- 창비 -->
+                        <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
+                            <p class="font-bold text-emerald-800 mb-1 text-sm">창비 특이사항</p>
+                            <p class="text-xs text-emerald-700">고학년/저학년 대상 명기 필수. <strong>AI 제작 작품 절대 불가</strong>.</p>
+                        </div>
+                        <!-- 문학동네 -->
+                        <div class="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                            <p class="font-bold text-amber-800 mb-1 text-sm">문학동네 특이사항</p>
+                            <p class="text-xs text-amber-700">방문/이메일 불가. A4 단면 출력 후 <strong>절대 제본 금지 (클립 사용)</strong>.</p>
+                        </div>
+                        <!-- 미래엔 -->
+                        <div class="p-4 bg-violet-50 border border-violet-200 rounded-lg">
+                            <p class="font-bold text-violet-800 mb-1 text-sm">미래엔 특이사항</p>
+                            <p class="text-xs text-violet-700"><strong>온라인 홈페이지 접수 전용</strong>. 문학/논픽션은 별도 '기획안' 작성 필수. 그림책은 PDF 더미북.</p>
+                        </div>
+                        <!-- 현북스 -->
+                        <div class="p-4 bg-sky-50 border border-sky-200 rounded-lg">
+                            <p class="font-bold text-sky-800 mb-1 text-sm">현북스 특이사항</p>
+                            <p class="text-xs text-sky-700">겉봉투에 응모하는 <strong>'공모전 부문 이름'</strong>을 반드시 표기하여 우편 발송.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 py-12 text-center text-slate-400">
+        <p class="text-sm font-bold mb-2 text-slate-300">2026 출판사 주최 어린이/청소년 책 공모전 로드맵</p>
+        <p class="text-xs max-w-2xl mx-auto leading-relaxed px-4">
+            ※ 본 로드맵은 각 출판사의 2026년 모집 요강을 통합·요약한 것입니다.<br>
+            일정이나 요강은 출판사 사정에 따라 변경될 수 있으므로, 응모 전 반드시 각 출판사 공식 홈페이지를 재확인하시기 바랍니다.
+        </p>
+    </footer>
+
+    <script>
+        // 1. Unified Data Source
+        const contests = [
+            // 비룡소 (Biryongso)
+            { pub: '비룡소', id: 'b1', title: '사각사각 그림책상', genre: 'picture', target: '만 3~4세 유아', deadline: '2026-03-31T23:59:59', dlText: '3월 31일', prize: '1,000만 원', method: '우편', detail: '표지 포함 가제본 제출, 원화 불가', theme: 'biryongso' },
+            { pub: '비룡소', id: 'b2', title: '황금도깨비상', genre: 'picture', target: '그림책 자유주제', deadline: '2026-06-30T23:59:59', dlText: '6월 30일', prize: '1,000만 원', method: '우편', detail: '가제본 제출, 응모지원서 필수', theme: 'biryongso' },
+            { pub: '비룡소', id: 'b3', title: '비룡소 문학상', genre: 'child', target: '7~10세 동화', deadline: '2026-06-30T23:59:59', dlText: '6월 30일', prize: '1,000만 원', method: '우편', detail: '200자 100매 내외 1편 (또는 30매 3편)', theme: 'biryongso' },
+            { pub: '비룡소', id: 'b4', title: '역사동화상', genre: 'child', target: '초등 역사동화 장편', deadline: '2026-06-30T23:59:59', dlText: '6월 30일', prize: '1,000만 원', method: '우편', detail: '200자 300매 내외', theme: 'biryongso' },
+            { pub: '비룡소', id: 'b5', title: '동시 문학상', genre: 'poem', target: '어린이 동시', deadline: '2026-06-30T23:59:59', dlText: '6월 30일', prize: '1,000만 원', method: '우편', detail: '동시 50편 이상', theme: 'biryongso' },
+            { pub: '비룡소', id: 'b6', title: '추리 소설 공모전', genre: 'youth', target: '초등 중고학년 추리', deadline: '2026-08-30T23:59:59', dlText: '8월 30일', prize: '1,000만 원', method: '온라인', detail: '200자 250매 내외 (홈페이지 업로드)', theme: 'biryongso' },
+            
+            // 창비 (Changbi)
+            { pub: '창비', id: 'c1', title: '청소년문학상', genre: 'youth', target: '청소년 장편소설', deadline: '2026-04-30T23:59:59', dlText: '4월 30일', prize: '2,000만 원', method: '온라인', detail: '이메일 접수, 200자 500매 내외', theme: 'changbi' },
+            { pub: '창비', id: 'c2', title: '좋은 어린이책', genre: 'child', target: '고/저학년 창작동화', deadline: '2026-06-30T23:59:59', dlText: '6월 30일', prize: '2,000만 원', method: '우편/온라인', detail: '고(300~500매), 저(80~300매) 명기 필수', theme: 'changbi' },
+            { pub: '창비', id: 'c3', title: '신인문학상', genre: 'all', target: '동시/동화/청소년/평론', deadline: '2025-09-30T23:59:59', dlText: '9월 30일', prize: '부문 300만 원', method: '우편', detail: '미등단 신인 한정, A4 출력본 제출', theme: 'changbi' },
+
+            // 문학동네 (Munhakdongne)
+            { pub: '문학동네', id: 'm1', title: '청소년문학상', genre: 'youth', target: '청소년 장편소설', deadline: '2026-05-31T23:59:59', dlText: '5월 31일', prize: '2,000만 원', method: '우편', detail: '200자 500매 안팎, 절대 제본 금지', theme: 'munhak' },
+            { pub: '문학동네', id: 'm2', title: '어린이문학상', genre: 'child', target: '10-13세 동화', deadline: '2026-10-31T23:59:59', dlText: '10월 31일', prize: '2,000만 원', method: '우편', detail: '장편 200~300매 또는 단편 5편', theme: 'munhak' },
+            { pub: '문학동네', id: 'm3', title: '초승달문학상', genre: 'child', target: '7-9세 동화', deadline: '2026-10-31T23:59:59', dlText: '10월 31일', prize: '2,000만 원', method: '우편', detail: '중장편 100매 내외, 지정 신청서 필수', theme: 'munhak' },
+            { pub: '문학동네', id: 'm4', title: '동시문학상', genre: 'poem', target: '어린이 동시', deadline: '2026-10-31T23:59:59', dlText: '10월 31일', prize: '1,000만 원', method: '우편', detail: '동시 50편 이상', theme: 'munhak' },
+
+            // 미래엔 (Mirae N)
+            { pub: '미래엔', id: 'mi1', title: '아이세움상 (그림책)', genre: 'picture', target: '그림책', deadline: '2026-06-30T23:59:59', dlText: '6월 30일', prize: '2,000만 원', method: '온라인', detail: '창작 그림책 더미북 PDF 제출', theme: 'miraen' },
+            { pub: '미래엔', id: 'mi2', title: '아이세움상 (문학)', genre: 'child', target: '어린이 문학', deadline: '2026-06-30T23:59:59', dlText: '6월 30일', prize: '2,000만 원', method: '온라인', detail: '200자 150~300매 + 기획안 별도 작성', theme: 'miraen' },
+            { pub: '미래엔', id: 'mi3', title: '아이세움상 (논픽션)', genre: 'child', target: '어린이 논픽션', deadline: '2026-06-30T23:59:59', dlText: '6월 30일', prize: '2,000만 원', method: '온라인', detail: '200자 100~200매 + 기획안 별도 작성', theme: 'miraen' },
+
+            // 현북스 (Hyunbooks)
+            { pub: '현북스', id: 'h1', title: '1회 공모전 (창작/역사)', genre: 'child', target: '10~15세 어린이', deadline: '2026-12-31T23:59:59', dlText: '12월 31일', prize: '대상 500만 원', method: '우편', detail: '창작동화, 역사동화. 겉봉투 부문 이름 표기', theme: 'hyunbooks' },
+            { pub: '현북스', id: 'h2', title: '1회 공모전 (청소년)', genre: 'youth', target: '10~15세 청소년', deadline: '2026-12-31T23:59:59', dlText: '12월 31일', prize: '대상 500만 원', method: '우편', detail: '청소년소설. 겉봉투 부문 이름 표기', theme: 'hyunbooks' },
+            { pub: '현북스', id: 'h3', title: '1회 공모전 (논픽션)', genre: 'child', target: '10~15세 지식정보', deadline: '2026-12-31T23:59:59', dlText: '12월 31일', prize: '대상 500만 원', method: '우편', detail: '논픽션 (천천히 읽는 책). 겉봉투 부문 표기', theme: 'hyunbooks' }
+        ];
+
+        // Set Dynamic Counts
+        document.getElementById('nav-count').innerText = contests.length;
+        document.getElementById('section-count').innerText = contests.length;
+
+        // 2. State Management
+        let currentPub = 'all';
+        let currentGenre = 'all';
+
+        // Icons map
+        const genreIcons = { 'picture': '🎨', 'child': '👧', 'youth': '📘', 'poem': '✒️', 'all': '✨' };
+
+        // 3. Render Logic
+        function renderCards() {
+            const grid = document.getElementById('cards-grid');
+            grid.innerHTML = '';
+
+            const filtered = contests.filter(c => {
+                const passPub = currentPub === 'all' || c.pub === currentPub;
+                const passGenre = currentGenre === 'all' || c.genre === currentGenre || (c.genre === 'all' && currentGenre !== 'picture'); // 신인문학상은 종합(all)로 취급
+                return passPub && passGenre;
+            });
+
+            if(filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-10 text-slate-500">조건에 맞는 공모전이 없습니다.</div>`;
+                return;
+            }
+
+            filtered.forEach((c, index) => {
+                const isPast = new Date() > new Date(c.deadline);
+                const colorClass = `pub-${c.theme}`;
+                const bgLightClass = `bg-${c.theme}-light`;
+                const borderClass = `border-${c.theme}`;
+
+                const cardHTML = `
+                <div class="card-container fade-in" style="animation-delay: ${index * 0.05}s">
+                    <div class="card-flip" onclick="this.classList.toggle('flipped')">
+                        <!-- FRONT -->
+                        <div class="card-front p-5 flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <span class="text-xs font-bold px-2 py-1 rounded border ${borderClass} ${colorClass} ${bgLightClass}">${c.pub}</span>
+                                    ${isPast ? `<span class="text-xs text-slate-400 font-bold bg-slate-100 px-2 py-1 rounded">마감</span>` : `<span class="text-xs text-indigo-600 font-bold bg-indigo-50 border border-indigo-100 px-2 py-1 rounded">${c.method}</span>`}
+                                </div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span>${genreIcons[c.genre] || '📝'}</span>
+                                    <p class="text-xs text-slate-500 font-medium">${c.target}</p>
+                                </div>
+                                <h3 class="text-lg font-bold text-slate-900 leading-snug h-12">${c.title}</h3>
+                            </div>
+                            
+                            <div class="space-y-2 text-sm mt-4 bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                <div class="flex justify-between">
+                                    <span class="font-semibold text-slate-500">🏆 상금</span>
+                                    <span class="font-bold text-slate-800">${c.prize}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="font-semibold text-slate-500">📅 마감</span>
+                                    <span class="font-bold ${isPast ? 'text-slate-400 line-through' : 'text-slate-800'}">${c.dlText}</span>
+                                </div>
+                            </div>
+                            <p class="text-[10px] text-center text-slate-400 mt-4 uppercase tracking-widest font-bold">자세히 보기 ↻</p>
+                        </div>
+
+                        <!-- BACK -->
+                        <div class="card-back p-5 scrollbar-hide">
+                            <h4 class="font-bold text-slate-800 mb-3 pb-2 border-b border-slate-300">핵심 요구사항</h4>
+                            <p class="text-sm text-slate-700 font-medium leading-relaxed mb-4 bg-white p-3 rounded border border-slate-200">
+                                ${c.detail}
+                            </p>
+                            <div class="mt-auto">
+                                <p class="text-xs font-bold text-slate-500 mb-1">※ 요약 정보</p>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    상세 출품 규격 및 응모 자격, 제출처(주소/링크)는 반드시 공식 공고문을 확인하세요.
+                                </p>
+                            </div>
+                            <p class="text-[10px] text-center text-slate-400 mt-4 font-bold">돌아가기 ↻</p>
+                        </div>
+                    </div>
+                </div>
+                `;
+                grid.innerHTML += cardHTML;
+            });
+        }
+
+        window.applyFilters = function(type, value) {
+            if(type === 'pub') {
+                currentPub = value;
+                document.querySelectorAll('[data-filter^="pub-"]').forEach(btn => {
+                    btn.classList.remove('active', 'bg-slate-700', 'text-white', 'border-slate-700');
+                    btn.classList.add('bg-white', 'text-slate-600');
+                });
+                const activeBtn = document.querySelector(`[data-filter="pub-${value}"]`);
+                activeBtn.classList.remove('bg-white', 'text-slate-600');
+                activeBtn.classList.add('active', 'bg-slate-700', 'text-white', 'border-slate-700');
+            } else {
+                currentGenre = value;
+                document.querySelectorAll('[data-filter^="genre-"]').forEach(btn => {
+                    btn.classList.remove('active', 'bg-slate-600', 'text-white', 'border-slate-600');
+                    if(btn.dataset.filter === 'genre-all') {
+                        btn.classList.add('bg-slate-200', 'text-slate-600');
+                    } else {
+                        btn.classList.add('bg-white', 'text-slate-600');
+                    }
+                });
+                const activeBtn = document.querySelector(`[data-filter="genre-${value}"]`);
+                if(value === 'all') {
+                    activeBtn.classList.remove('bg-slate-200', 'text-slate-600');
+                } else {
+                    activeBtn.classList.remove('bg-white', 'text-slate-600');
+                }
+                activeBtn.classList.add('active', 'bg-slate-600', 'text-white', 'border-slate-600');
+            }
+            renderCards();
+        }
+
+        // 4. Master Countdown
+        function updateMasterCountdown() {
+            const now = new Date();
+            let nearest = null;
+            let minDiff = Infinity;
+
+            contests.forEach(c => {
+                const target = new Date(c.deadline);
+                const diff = target - now;
+                if(diff > 0 && diff < minDiff) {
+                    minDiff = diff;
+                    nearest = c;
+                }
+            });
+
+            if(nearest) {
+                const days = Math.floor(minDiff / (1000 * 60 * 60 * 24));
+                
+                document.getElementById('next-pub-badge').innerText = nearest.pub;
+                document.getElementById('next-pub-badge').className = `text-sm font-bold mb-1 pub-${nearest.theme}`;
+                document.getElementById('next-contest-name').innerText = nearest.title;
+                document.getElementById('d-day').innerText = days;
+            } else {
+                document.getElementById('next-contest-name').innerText = "올해 접수 종료";
+            }
+        }
+
+        // 5. Checklist Setup
+        const masterChecklist = [
+            "원고 첫 장 외에 본문에는 이름/연락처 등 개인정보를 모두 삭제했는가?",
+            "이메일/온라인 전용 접수가 아닌 경우, 원고를 제본하지 않고 A4 '단면'으로 출력했는가?",
+            "해당 출판사에서 요구하는 지정된 '응모지원서' 혹은 '기획안'을 첨부했는가?",
+            "우편 발송 시 겉봉투에 응모하는 공모전 이름과 응모 부문을 명확히 기재했는가?",
+            "AI를 사용하지 않았으며, 타사 공모전 중복 투고작이 아닌 순수 창작물인가?"
+        ];
+
+        const clContainer = document.getElementById('checklist-container');
+        masterChecklist.forEach((item, i) => {
+            clContainer.innerHTML += `
+                <label class="flex items-center p-4 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer shadow-sm transition-all">
+                    <input type="checkbox" class="w-5 h-5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-600">
+                    <span class="ml-4 text-sm text-slate-800 font-medium">${item}</span>
+                </label>
+            `;
+        });
+
+        // 6. Chart.js Initialization
+        function initCharts() {
+            Chart.defaults.font.family = "'Pretendard', sans-serif";
+            
+            // Stacked Bar Chart for Timeline
+            const ctxTime = document.getElementById('timelineChart').getContext('2d');
+            new Chart(ctxTime, {
+                type: 'bar',
+                data: {
+                    labels: ['3월', '4월', '5월', '6월', '8월', '9월', '10월', '12월'],
+                    datasets: [
+                        { label: '비룡소', data: [1, 0, 0, 4, 1, 0, 0, 0], backgroundColor: '#ea580c' }, // orange-600
+                        { label: '창비', data: [0, 1, 0, 1, 0, 1, 0, 0], backgroundColor: '#059669' },   // emerald-600
+                        { label: '문학동네', data: [0, 0, 1, 0, 0, 0, 3, 0], backgroundColor: '#b45309' }, // amber-700
+                        { label: '미래엔', data: [0, 0, 0, 3, 0, 0, 0, 0], backgroundColor: '#8b5cf6' },   // violet-500
+                        { label: '현북스', data: [0, 0, 0, 0, 0, 0, 0, 3], backgroundColor: '#0ea5e9' }    // sky-500
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true, grid: { display: false } },
+                        y: { stacked: true, ticks: { stepSize: 1 } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Doughnut Chart for Categories
+            const countGenre = (g) => contests.filter(c => c.genre === g).length;
+            
+            const ctxCat = document.getElementById('categoryChart').getContext('2d');
+            new Chart(ctxCat, {
+                type: 'doughnut',
+                data: {
+                    labels: ['그림책', '동화/논픽션', '소설(청소년)', '동시', '종합(신인)'],
+                    datasets: [{
+                        data: [countGenre('picture'), countGenre('child'), countGenre('youth'), countGenre('poem'), countGenre('all')],
+                        backgroundColor: [
+                            '#fbbf24', // amber-400
+                            '#38bdf8', // sky-400
+                            '#818cf8', // indigo-400
+                            '#f472b6', // pink-400
+                            '#94a3b8'  // slate-400
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#f8fafc'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'right', labels: { boxWidth: 12, font: {size: 11} } }
+                    }
+                }
+            });
+        }
+
+        // Initialize Everything
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCards();
+            updateMasterCountdown();
+            setInterval(updateMasterCountdown, 60000); // 1 min update
+            initCharts();
+        });
+    </script>
+</body>
+</html>
