@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>출판사 주최 어린이/청소년 책 공모전</title>
+    <title>2026 아동·청소년 문학 공모전 모듬전</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -144,7 +144,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center gap-3">
-                    <span class="text-xl font-bold text-slate-800 tracking-tight">✍️ 2026 공모전 가이드</span>
+                    <span class="text-xl font-bold text-slate-800 tracking-tight">✨ 2026 공모전 모듬전</span>
                 </div>
                 <nav class="hidden md:flex space-x-6 text-sm">
                     <a href="#dashboard" class="text-slate-600 hover:text-slate-900 font-semibold transition-colors">일정 분석</a>
@@ -167,10 +167,12 @@
             
             <div class="max-w-5xl mx-auto px-4 text-center relative z-10">
                 <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight leading-tight">
-                    출판사 주최 어린이/청소년 책 공모전
+                    2026 아동·청소년 문학<br>
+                    <span class="text-indigo-600">공모전 모듬전 🍱</span>
                 </h1>
                 <p class="text-lg md:text-xl text-indigo-700 font-bold mb-10 max-w-2xl mx-auto drop-shadow-sm">
-                    주요 문학상 중 내 작품에 가장 잘 맞는 무대를 찾아보세요.
+                    올해도 내 작품 노릇노릇 맛있게 구워봅시다! 🍳<br>
+                    <span class="text-base md:text-lg text-slate-700 font-medium mt-2 inline-block">그림책부터 동화, 청소년 소설까지, 나에게 딱 맞는 무대를 찾아보세요.</span>
                 </p>
                 
                 <!-- Master Countdown -->
@@ -197,8 +199,11 @@
         <section id="dashboard" class="py-16 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold text-slate-900 mb-4">📊 2026 캘린더 전략 분석</h2>
-                    <p class="text-slate-600">주요 7개 출판사의 마감 일정이 상/하/연말별로 분포되어 있습니다. 연간 집필 계획을 세워보세요.</p>
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">🌸 2026 공모전 달력</h2>
+                    <p class="text-slate-600 leading-relaxed text-lg">
+                        마감이라는 시간에 마음을 재촉하기보다,<br class="hidden md:block">
+                        내 글과 그림이 천천히 잘 익어가는 순간을 믿어요. 🌷
+                    </p>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -328,7 +333,7 @@
                         <!-- 현북스 -->
                         <div class="p-4 bg-sky-50 border border-sky-200 rounded-lg">
                             <p class="font-bold text-sky-800 mb-1 text-sm">현북스 특이사항</p>
-                            <p class="text-xs text-sky-700">겉봉투에 응모하는 <strong>'공모전 부문 이름'</strong>을 반드시 표기하여 우편 발송.</p>
+                            <p class="text-xs text-sky-700">앤서니 브라운상은 <strong>더미북(우편) + 신청서/PDF(메일) 병행</strong> 제출. 다른 부문은 겉봉투 부문 명기 후 우편 발송.</p>
                         </div>
                     </div>
                 </div>
@@ -338,7 +343,7 @@
     </main>
 
     <footer class="bg-slate-900 py-12 text-center text-slate-400">
-        <p class="text-sm font-bold mb-2 text-slate-300">2026 출판사 주최 어린이/청소년 책 공모전 로드맵</p>
+        <p class="text-sm font-bold mb-2 text-slate-300">2026 아동·청소년 문학 공모전 모듬전</p>
         <p class="text-xs max-w-2xl mx-auto leading-relaxed px-4">
             ※ 본 로드맵은 각 출판사의 2026년 모집 요강을 통합·요약한 것입니다.<br>
             일정이나 요강은 출판사 사정에 따라 변경될 수 있으므로, 응모 전 반드시 각 출판사 공식 홈페이지를 재확인하시기 바랍니다.
@@ -381,7 +386,8 @@
             // 현북스 (Hyunbooks)
             { pub: '현북스', id: 'h1', title: '1회 공모전 (창작/역사)', genre: 'child', target: '10~15세 어린이', deadline: '2026-12-31T23:59:59', dlText: '12월 31일', prize: '대상 500만 원', method: '우편', detail: '창작동화, 역사동화. 겉봉투 부문 이름 표기', theme: 'hyunbooks' },
             { pub: '현북스', id: 'h2', title: '1회 공모전 (청소년)', genre: 'youth', target: '10~15세 청소년', deadline: '2026-12-31T23:59:59', dlText: '12월 31일', prize: '대상 500만 원', method: '우편', detail: '청소년소설. 겉봉투 부문 이름 표기', theme: 'hyunbooks' },
-            { pub: '현북스', id: 'h3', title: '1회 공모전 (논픽션)', genre: 'child', target: '10~15세 지식정보', deadline: '2026-12-31T23:59:59', dlText: '12월 31일', prize: '대상 500만 원', method: '우편', detail: '논픽션 (천천히 읽는 책). 겉봉투 부문 표기', theme: 'hyunbooks' }
+            { pub: '현북스', id: 'h3', title: '1회 공모전 (논픽션)', genre: 'child', target: '10~15세 지식정보', deadline: '2026-12-31T23:59:59', dlText: '12월 31일', prize: '대상 500만 원', method: '우편', detail: '논픽션 (천천히 읽는 책). 겉봉투 부문 표기', theme: 'hyunbooks' },
+            { pub: '현북스', id: 'h4', title: '앤서니 브라운 그림책상', genre: 'picture', target: '창작 그림책', deadline: '2026-09-30T23:59:59', dlText: '9월 30일', prize: '출판계약 및 출간', method: '우편+메일', detail: '한/영 병기 PDF 프린트 제본 더미북 우편 제출. 신청서와 PDF 파일은 메일 제출.', theme: 'hyunbooks' }
         ];
 
         // Set Dynamic Counts
@@ -562,7 +568,7 @@
                         { label: '문학동네', data: [0, 0, 1, 0, 0, 0, 3, 0], backgroundColor: '#b45309' }, // amber-700
                         { label: '이야기꽃', data: [1, 0, 0, 0, 0, 0, 0, 0], backgroundColor: '#ec4899' },   // pink-500
                         { label: '창비', data: [0, 1, 0, 1, 0, 1, 0, 0], backgroundColor: '#059669' },   // emerald-600
-                        { label: '현북스', data: [0, 0, 0, 0, 0, 0, 0, 3], backgroundColor: '#0ea5e9' }    // sky-500
+                        { label: '현북스', data: [0, 0, 0, 0, 0, 1, 0, 3], backgroundColor: '#0ea5e9' }    // sky-500 (9월 추가됨)
                     ]
                 },
                 options: {
