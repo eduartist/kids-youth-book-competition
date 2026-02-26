@@ -166,13 +166,14 @@
             </div>
             
             <div class="max-w-5xl mx-auto px-4 text-center relative z-10">
-                <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight leading-tight">
-                    2026 아동·청소년 문학<br>
+                <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight leading-tight">
+                    <span class="text-slate-700">2026</span><br>
+                    아동·청소년 문학<br>
                     <span class="text-indigo-600">공모전 모듬전 🍱</span>
                 </h1>
                 <p class="text-lg md:text-xl text-indigo-700 font-bold mb-10 max-w-2xl mx-auto drop-shadow-sm">
-                    올해도 내 작품 노릇노릇 맛있게 구워봅시다! 🍳<br>
-                    <span class="text-base md:text-lg text-slate-700 font-medium mt-2 inline-block">그림책부터 동화, 청소년 소설까지, 나에게 딱 맞는 무대를 찾아보세요.</span>
+                    내 작품 노릇노릇 맛있게 구워봅시다! 🍳<br>
+                    <span class="text-base md:text-lg text-slate-700 font-medium mt-2 inline-block">그림책부터 동화, 청소년 소설까지, 내 입맛에 맞는 공모전을 찾아보세요.</span>
                 </p>
                 
                 <!-- Master Countdown -->
@@ -202,7 +203,7 @@
                     <h2 class="text-3xl font-bold text-slate-900 mb-4">🌸 2026 공모전 달력</h2>
                     <p class="text-slate-600 leading-relaxed text-lg">
                         마감이라는 시간에 마음을 재촉하기보다,<br class="hidden md:block">
-                        내 글과 그림이 천천히 잘 익어가는 순간을 믿어요. 🌷
+                        글과 그림이 노릇노릇하게 익어가는 순간을 믿어요. 🌷
                     </p>
                 </div>
 
@@ -351,7 +352,7 @@
     </footer>
 
     <script>
-        // 1. Unified Data Source
+        // 1. Unified Data Source (Merged duplications for a cleaner view)
         const contests = [
             // 길벗어린이 (Gilbut)
             { pub: '길벗어린이', id: 'g1', title: '민들레그림책상', genre: 'picture', target: '창작 그림책', deadline: '2026-05-29T23:59:59', dlText: '5월 29일', prize: '대상 1,000만 원', method: '우편', detail: '글, 그림 완성 더미북. 홈페이지 지원서 다운.', theme: 'gilbut' },
@@ -364,10 +365,8 @@
             { pub: '비룡소', id: 'b5', title: '동시 문학상', genre: 'poem', target: '어린이 동시', deadline: '2026-06-30T23:59:59', dlText: '6월 30일', prize: '1,000만 원', method: '우편', detail: '동시 50편 이상', theme: 'biryongso' },
             { pub: '비룡소', id: 'b6', title: '추리 소설 공모전', genre: 'youth', target: '초등 중고학년 추리', deadline: '2026-08-30T23:59:59', dlText: '8월 30일', prize: '1,000만 원', method: '온라인', detail: '200자 250매 내외 (홈페이지 업로드)', theme: 'biryongso' },
             
-            // 미래엔 (Mirae N)
-            { pub: '미래엔', id: 'mi1', title: '아이세움상 (그림책)', genre: 'picture', target: '그림책', deadline: '2026-06-30T23:59:59', dlText: '6월 30일', prize: '2,000만 원', method: '온라인', detail: '창작 그림책 더미북 PDF 제출', theme: 'miraen' },
-            { pub: '미래엔', id: 'mi2', title: '아이세움상 (문학)', genre: 'child', target: '어린이 문학', deadline: '2026-06-30T23:59:59', dlText: '6월 30일', prize: '2,000만 원', method: '온라인', detail: '200자 150~300매 + 기획안 별도 작성', theme: 'miraen' },
-            { pub: '미래엔', id: 'mi3', title: '아이세움상 (논픽션)', genre: 'child', target: '어린이 논픽션', deadline: '2026-06-30T23:59:59', dlText: '6월 30일', prize: '2,000만 원', method: '온라인', detail: '200자 100~200매 + 기획안 별도 작성', theme: 'miraen' },
+            // 미래엔 (Mirae N) - 병합됨
+            { pub: '미래엔', id: 'mi1', title: '제9회 아이세움상', genre: 'all', target: '그림책 / 문학 / 논픽션', deadline: '2026-06-30T23:59:59', dlText: '6월 30일', prize: '부문별 대상 2,000만', method: '온라인', detail: '온라인 전용 접수. 그림책은 더미북 PDF, 문학/논픽션은 별도 기획안 작성 필수.', theme: 'miraen' },
 
             // 문학동네 (Munhakdongne)
             { pub: '문학동네', id: 'm1', title: '청소년문학상', genre: 'youth', target: '청소년 장편소설', deadline: '2026-05-31T23:59:59', dlText: '5월 31일', prize: '2,000만 원', method: '우편', detail: '200자 500매 안팎, 절대 제본 금지', theme: 'munhak' },
@@ -383,11 +382,9 @@
             { pub: '창비', id: 'c2', title: '좋은 어린이책', genre: 'child', target: '고/저학년 창작동화', deadline: '2026-06-30T23:59:59', dlText: '6월 30일', prize: '2,000만 원', method: '우편/온라인', detail: '고(300~500매), 저(80~300매) 명기 필수', theme: 'changbi' },
             { pub: '창비', id: 'c3', title: '신인문학상', genre: 'all', target: '동시/동화/청소년/평론', deadline: '2025-09-30T23:59:59', dlText: '9월 30일', prize: '부문 300만 원', method: '우편', detail: '미등단 신인 한정, A4 출력본 제출', theme: 'changbi' },
 
-            // 현북스 (Hyunbooks)
-            { pub: '현북스', id: 'h1', title: '1회 공모전 (창작/역사)', genre: 'child', target: '10~15세 어린이', deadline: '2026-12-31T23:59:59', dlText: '12월 31일', prize: '대상 500만 원', method: '우편', detail: '창작동화, 역사동화. 겉봉투 부문 이름 표기', theme: 'hyunbooks' },
-            { pub: '현북스', id: 'h2', title: '1회 공모전 (청소년)', genre: 'youth', target: '10~15세 청소년', deadline: '2026-12-31T23:59:59', dlText: '12월 31일', prize: '대상 500만 원', method: '우편', detail: '청소년소설. 겉봉투 부문 이름 표기', theme: 'hyunbooks' },
-            { pub: '현북스', id: 'h3', title: '1회 공모전 (논픽션)', genre: 'child', target: '10~15세 지식정보', deadline: '2026-12-31T23:59:59', dlText: '12월 31일', prize: '대상 500만 원', method: '우편', detail: '논픽션 (천천히 읽는 책). 겉봉투 부문 표기', theme: 'hyunbooks' },
-            { pub: '현북스', id: 'h4', title: '앤서니 브라운 그림책상', genre: 'picture', target: '창작 그림책', deadline: '2026-09-30T23:59:59', dlText: '9월 30일', prize: '출판계약 및 출간', method: '우편+메일', detail: '한/영 병기 PDF 프린트 제본 더미북 우편 제출. 신청서와 PDF 파일은 메일 제출.', theme: 'hyunbooks' }
+            // 현북스 (Hyunbooks) - 병합됨
+            { pub: '현북스', id: 'h1', title: '제1회 어린이·청소년 책 공모전', genre: 'all', target: '10~15세 어린이/청소년 대상', deadline: '2026-12-31T23:59:59', dlText: '12월 31일', prize: '부문별 대상 500만 원', method: '우편', detail: '역사동화/창작동화(청소년소설 포함)/논픽션. 겉봉투 부문 이름 표기 필수.', theme: 'hyunbooks' },
+            { pub: '현북스', id: 'h2', title: '앤서니 브라운 그림책상', genre: 'picture', target: '창작 그림책', deadline: '2026-09-30T23:59:59', dlText: '9월 30일', prize: '출판계약 및 출간', method: '우편+메일', detail: '한/영 병기 PDF 프린트 제본 더미북 우편 제출. 신청서와 PDF 파일은 메일 제출.', theme: 'hyunbooks' }
         ];
 
         // Set Dynamic Counts
@@ -408,7 +405,7 @@
 
             const filtered = contests.filter(c => {
                 const passPub = currentPub === 'all' || c.pub === currentPub;
-                const passGenre = currentGenre === 'all' || c.genre === currentGenre || (c.genre === 'all' && currentGenre !== 'picture'); // 신인문학상은 종합(all)로 취급
+                const passGenre = currentGenre === 'all' || c.genre === currentGenre || (c.genre === 'all' && currentGenre !== 'picture'); // 종합은 all 필터에서 보임
                 return passPub && passGenre;
             });
 
@@ -555,7 +552,7 @@
         function initCharts() {
             Chart.defaults.font.family = "'Pretendard', sans-serif";
             
-            // Stacked Bar Chart for Timeline
+            // Stacked Bar Chart for Timeline (Updated based on merged data)
             const ctxTime = document.getElementById('timelineChart').getContext('2d');
             new Chart(ctxTime, {
                 type: 'bar',
@@ -564,11 +561,11 @@
                     datasets: [
                         { label: '길벗어린이', data: [0, 0, 1, 0, 0, 0, 0, 0], backgroundColor: '#eab308' }, // yellow-500
                         { label: '비룡소', data: [1, 0, 0, 4, 1, 0, 0, 0], backgroundColor: '#ea580c' }, // orange-600
-                        { label: '미래엔', data: [0, 0, 0, 3, 0, 0, 0, 0], backgroundColor: '#8b5cf6' },   // violet-500
+                        { label: '미래엔', data: [0, 0, 0, 1, 0, 0, 0, 0], backgroundColor: '#8b5cf6' },   // violet-500
                         { label: '문학동네', data: [0, 0, 1, 0, 0, 0, 3, 0], backgroundColor: '#b45309' }, // amber-700
                         { label: '이야기꽃', data: [1, 0, 0, 0, 0, 0, 0, 0], backgroundColor: '#ec4899' },   // pink-500
                         { label: '창비', data: [0, 1, 0, 1, 0, 1, 0, 0], backgroundColor: '#059669' },   // emerald-600
-                        { label: '현북스', data: [0, 0, 0, 0, 0, 1, 0, 3], backgroundColor: '#0ea5e9' }    // sky-500 (9월 추가됨)
+                        { label: '현북스', data: [0, 0, 0, 0, 0, 1, 0, 1], backgroundColor: '#0ea5e9' }    // sky-500
                     ]
                 },
                 options: {
